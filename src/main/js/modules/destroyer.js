@@ -69,7 +69,8 @@ battleship
                         // Apply to firstPoint until find a !attacked && !shouldNotAttack
                     }
 
-                    throw "Why can not find a attack point?";
+                    throw "Why can not find an attack point?\n" +
+                        "Map: " + Map.log();
                 }
 
                 hit(firstHit, true);

@@ -18,11 +18,7 @@ battleship
                 var row = [];
 
                 for (var j = 0; j < 10; j++) {
-                    row.push({
-                        attacked: false,
-                        onShip: false, // when attacked && hit
-                        aroundShip: false // !onShip
-                    });
+                    row.push(new MapPos());
                 }
 
                 rows.push(row);
@@ -174,5 +170,18 @@ function Point(x, y) {
 Point.prototype = {
     toString: function() {
         return "[" + this.x + ", " + this.y + "]";
+    }
+};
+
+function MapPos() {
+    this.attacked = false;
+    this.onShip = false; // when attacked && hit
+    this.aroundShip = false; // !onShip
+}
+MapPos.prototype = {
+    toString: function() {
+        return (this.attacked ? "a" : " ") + 
+            (this.onShip ? "o" : " ") +
+            (this.aroundShip ? "r" : " ");
     }
 };
