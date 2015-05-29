@@ -14,7 +14,7 @@ battleship
                             if (piece === true) {
                                 onHit(p);
                             } else {
-                                console.log("Destroyed a Scout");
+                                //console.log("Destroyed a Scout");
                                 Map.hasScoutShip(p);
                             }
                         } else {

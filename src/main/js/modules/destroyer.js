@@ -35,7 +35,7 @@ battleship
                 function findNextHit() {
 
                     var dirChanges = isVertical ? [directionChanges[0], directionChanges[2]] : [directionChanges[1], directionChanges[3]];
-console.log("isVertical=" + isVertical);
+//console.log("isVertical=" + isVertical);
                     for (var i = 0; i < dirChanges.length; i++) {
                         var dirChange = dirChanges[i];
 
@@ -45,14 +45,14 @@ console.log("isVertical=" + isVertical);
                             dirChange(point);
                             var h = Map.get(point);
                             if (h == null) {
-                                console.log("Failed this direction " + point.x + ", " + point.y);
+                                //console.log("Failed this direction " + point.x + ", " + point.y);
                                 break THIS_DIRECTION;
                             }
                             if (!h.attacked) {
                                 if (!Map.shouldNotHit(point)) {
                                     return point;
                                 } else {
-                                    console.log("Failed this direction !attacked && shouldNotHit " + point.x + ", " + point.y);
+                                    //console.log("Failed this direction !attacked && shouldNotHit " + point.x + ", " + point.y);
                                     break THIS_DIRECTION;
                                 }
                             } else if (h.attacked) {
@@ -60,7 +60,7 @@ console.log("isVertical=" + isVertical);
                                     // continue this direction
                                     continue THIS_DIRECTION;
                                 } else {
-                                    console.log("Failed this direction attacked && !onShip " + point.x + ", " + point.y);
+                                    //console.log("Failed this direction attacked && !onShip " + point.x + ", " + point.y);
                                     break THIS_DIRECTION;
                                 }
                             }

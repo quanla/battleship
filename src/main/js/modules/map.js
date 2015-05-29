@@ -2,8 +2,8 @@ battleship
     .factory("Map", function() {
 
         function findAround(x, y, func) {
-            for (var x1 = -1; x1 < 3; x1++) {
-                for (var y1 = -1; y1 < 3; y1++) {
+            for (var x1 = -1; x1 < 2; x1++) {
+                for (var y1 = -1; y1 < 2; y1++) {
                     if (func(x + x1, y + y1)) {
                         return true;
                     }
@@ -45,15 +45,18 @@ battleship
             }
         }
 
-        return {
-            // Not attacked or on or around any ship
+        var floatingShips = [1, 1, 2, 2, 3, 4, 5];
+
+        var map;
+        return map = {
+            // Not attacked or on or around any ship and can fit ship
             newWhitePoint: function() {
                 for (var i=0; i<100;i++) {
                     var x = Math.floor(Math.random() * 10);
                     var y = Math.floor(Math.random() * 10);
 
                     var h = rows[y][x];
-                    if (!h.attacked && !h.aroundShip) {
+                    if (!h.attacked && !h.aroundShip && map.canFitShip(x, y)) {
                         return {
                             x: x,
                             y: y
@@ -63,7 +66,7 @@ battleship
 
                 // Can not find?
                 return findPoint(function(h) {
-                    return !h.attacked && !h.onShip && !h.aroundShip;
+                    return !h.attacked && !h.aroundShip && map.canFitShip(x, y);
                 });
             },
             shouldNotHit: function(x, y) {
@@ -115,6 +118,45 @@ battleship
                     h.aroundShip = false;
                     h.onShip = true;
                 }
+
+                Cols.remove(shipPoints.length, floatingShips);
+            },
+
+            canFitShip: function(x, y) {
+                //floatingShips
+                //!h.attacked && !h.aroundShip
+
+                function getMax() {
+                    function count(dirSet) {
+                        var count = 1;
+                        for (var i = 0; i < dirSet.length; i++) {
+                            var dirChange = dirSet[i];
+
+                            var point = new Point(x, y);
+
+                            for (;;) {
+                                dirChange(point);
+                                var h = map.get(point);
+
+                                if (h != null && !h.attacked && !h.aroundShip) {
+                                    count ++;
+                                } else {
+                                    break;
+                                }
+                            }
+                        }
+                        return count;
+                    }
+
+                    return Math.max(
+                        count([directionChanges[0], directionChanges[2]]),
+                        count([directionChanges[1], directionChanges[3]])
+                    );
+                }
+
+                var max = getMax();
+                //console.log("Max can fit for [" + x + ", " + y + "] is " + max);
+                return floatingShips[0] <= max;
             }
 
         };

@@ -1,4 +1,6 @@
 function Bot() {
+	// #include All other files here
+
 	var theBot = this;
 	var hunter = battleship.get("Hunter");
 	var destroyer = battleship.get("Destroyer");

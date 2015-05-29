@@ -26,13 +26,22 @@ public class BattleshipCodeServer {
 
                 ServletOutputStream out = resp.getOutputStream();
 
+
+                String bot = FileUtil.readFileToString("src/main/js/bot.js");
+                String includeString = "// #include All other files here";
+                int start = bot.indexOf(includeString);
+                int end = start + includeString.length();
+
+                out.write(bot.substring(0, start).getBytes());
+
                 FileUtil.readFileOut(new File("src/main/js/injector.js"), out);
 
                 FileUtil.eachFile(new File("src/main/js/modules"), (f) -> {
                     FileUtil.readFileOut(f, out);
                 });
 
-                FileUtil.readFileOut(new File("src/main/js/bot.js"), out);
+
+                out.write(bot.substring(end).getBytes());
             }
         });
 
