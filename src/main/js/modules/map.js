@@ -38,7 +38,7 @@ battleship
                 for (var x = 0; x < row.length; x++) {
                     var h = row[x];
 
-                    if (func(h)) {
+                    if (func(h, x, y)) {
                         return {x: x, y: y};
                     }
                 }
@@ -65,7 +65,7 @@ battleship
                 }
 
                 // Can not find?
-                return findPoint(function(h) {
+                return findPoint(function(h, x, y) {
                     return !h.attacked && !h.aroundShip && map.canFitShip(x, y);
                 });
             },
