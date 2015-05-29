@@ -89,7 +89,7 @@ battleship
                 }
 
                 if (x < 0 || x >= 10 || y < 0 || y >= 10) {
-                    throw "Out of map: " + x + ", " + y;
+                    return null;
                 }
                 return rows[y][x];
             },
@@ -125,3 +125,8 @@ function Point(x, y) {
     this.x = x;
     this.y = y;
 }
+Point.prototype = {
+    toString: function() {
+        return "[" + x + ", " + y + "]";
+    }
+};

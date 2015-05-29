@@ -32,8 +32,50 @@ battleship
                     }
                 }
 
+                function findNextHit() {
+
+                    var dirChanges = isVertical ? [directionChanges[0], directionChanges[2]] : [directionChanges[1], directionChanges[3]];
+console.log("isVertical=" + isVertical);
+                    for (var i = 0; i < dirChanges.length; i++) {
+                        var dirChange = dirChanges[i];
+
+                        var point = ObjectUtil.clone(firstHit);
+                        THIS_DIRECTION:
+                        for (;;) {
+                            dirChange(point);
+                            var h = Map.get(point);
+                            if (h == null) {
+                                console.log("Failed this direction " + point.x + ", " + point.y);
+                                break THIS_DIRECTION;
+                            }
+                            if (!h.attacked) {
+                                if (!Map.shouldNotHit(point)) {
+                                    return point;
+                                } else {
+                                    console.log("Failed this direction !attacked && shouldNotHit " + point.x + ", " + point.y);
+                                    break THIS_DIRECTION;
+                                }
+                            } else if (h.attacked) {
+                                if (h.onShip) {
+                                    // continue this direction
+                                    continue THIS_DIRECTION;
+                                } else {
+                                    console.log("Failed this direction attacked && !onShip " + point.x + ", " + point.y);
+                                    break THIS_DIRECTION;
+                                }
+                            }
+                        }
+
+                        // Apply to firstPoint until find a !attacked && !shouldNotAttack
+                    }
+
+                    throw "Why can not find a attack point?";
+                }
+
                 hit(firstHit, true);
                 examine();
+
+
 
                 return {
                     execute: function(turn) {
@@ -54,48 +96,18 @@ battleship
                                 // Missed
                                 Map.noShip(attacking);
                             } else {
-                                isVertical = true;
+                                isVertical = (attacking.x == firstHit.x);
                                 hit(attacking, result);
                             }
                         } else { // isVertical != null
-                            var dirChanges = isVertical ? [directionChanges[0], directionChanges[2]] : [directionChanges[1], directionChanges[3]];
-
-                            var point = ObjectUtil.clone(firstHit);
-                            for (var i = 0; i < dirChanges.length; i++) {
-                                var dirChange = dirChanges[i];
-
-                                THIS_DIRECTION:
-                                for (;;) {
-                                    dirChange(point);
-                                    var h = Map.get(point);
-                                    if (!h.attacked) {
-                                        if (!Map.shouldNotHit(point)) {
-                                            var result = turn.attack(point.x, point.y);
-                                            if (!result) {
-                                                // Missed
-                                                Map.noShip(point);
-                                            } else {
-                                                isVertical = true;
-                                                hit(point, result);
-                                            }
-                                            return;
-                                        } else {
-                                            break THIS_DIRECTION;
-                                        }
-                                    } else if (h.attacked) {
-                                        if (h.onShip) {
-                                            // continue this direction
-                                            continue THIS_DIRECTION;
-                                        } else {
-                                            break THIS_DIRECTION;
-                                        }
-                                    }
-                                }
-
-                                // Apply to firstPoint until find a !attacked && !shouldNotAttack
+                            var point = findNextHit();
+                            var result = turn.attack(point.x, point.y);
+                            if (!result) {
+                                // Missed
+                                Map.noShip(point);
+                            } else {
+                                hit(point, result);
                             }
-
-                            throw "Why can not find a attack point?";
                         }
                     },
                     then: function(onDestroyed1) {
