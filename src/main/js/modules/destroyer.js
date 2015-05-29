@@ -40,28 +40,28 @@ battleship
                         var dirChange = dirChanges[i];
 
                         var point = ObjectUtil.clone(firstHit);
-                        THIS_DIRECTION:
+                        //THIS_DIRECTION:
                         for (;;) {
                             dirChange(point);
                             var h = Map.get(point);
                             if (h == null) {
                                 //console.log("Failed this direction " + point.x + ", " + point.y);
-                                break THIS_DIRECTION;
+                                break;
                             }
                             if (!h.attacked) {
                                 if (!Map.shouldNotHit(point)) {
                                     return point;
                                 } else {
                                     //console.log("Failed this direction !attacked && shouldNotHit " + point.x + ", " + point.y);
-                                    break THIS_DIRECTION;
+                                    break;
                                 }
                             } else if (h.attacked) {
                                 if (h.onShip) {
                                     // continue this direction
-                                    continue THIS_DIRECTION;
+                                    //continue;
                                 } else {
                                     //console.log("Failed this direction attacked && !onShip " + point.x + ", " + point.y);
-                                    break THIS_DIRECTION;
+                                    break;
                                 }
                             }
                         }
@@ -79,6 +79,7 @@ battleship
 
                 return {
                     execute: function(turn) {
+                        var result;
                         if (isVertical == null) {
                             // Try vertical
                             var attacking = new Point(firstHit.x, firstHit.y - 1);
@@ -91,7 +92,7 @@ battleship
                                 }
                             }
 
-                            var result = turn.attack(attacking.x, attacking.y);
+                            result = turn.attack(attacking.x, attacking.y);
                             if (!result) {
                                 // Missed
                                 Map.noShip(attacking);
@@ -101,7 +102,7 @@ battleship
                             }
                         } else { // isVertical != null
                             var point = findNextHit();
-                            var result = turn.attack(point.x, point.y);
+                            result = turn.attack(point.x, point.y);
                             if (!result) {
                                 // Missed
                                 Map.noShip(point);

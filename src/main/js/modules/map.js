@@ -100,8 +100,9 @@ battleship
                 this.markShip([p]);
             },
             markShip: function(shipPoints) {
-                for (var i = 0; i < shipPoints.length; i++) {
-                    var p = shipPoints[i];
+                var i, p;
+                for (i = 0; i < shipPoints.length; i++) {
+                    p = shipPoints[i];
 
                     findAround(p.x, p.y, function(x, y) {
                         if (x < 0 || x >= 10 || y < 0 || y >= 10) {
@@ -111,20 +112,24 @@ battleship
                     });
                 }
 
-                for (var i = 0; i < shipPoints.length; i++) {
-                    var p = shipPoints[i];
+                for (i = 0; i < shipPoints.length; i++) {
+                    p = shipPoints[i];
 
                     var h = this.get(p);
                     h.aroundShip = false;
                     h.onShip = true;
                 }
 
-                Cols.remove(shipPoints.length, floatingShips);
+                //console.log("Sank " + shipPoints.length);
+                //console.log("Before: " + floatingShips);
+                //Cols.remove(shipPoints.length, floatingShips);
+                //console.log("After : " + floatingShips);
             },
 
             canFitShip: function(x, y) {
-                //floatingShips
-                //!h.attacked && !h.aroundShip
+                if (floatingShips.length == 0) {
+                    return true;
+                }
 
                 function getMax() {
                     function count(dirSet) {
@@ -155,7 +160,6 @@ battleship
                 }
 
                 var max = getMax();
-                //console.log("Max can fit for [" + x + ", " + y + "] is " + max);
                 return floatingShips[0] <= max;
             }
 
@@ -169,6 +173,6 @@ function Point(x, y) {
 }
 Point.prototype = {
     toString: function() {
-        return "[" + x + ", " + y + "]";
+        return "[" + this.x + ", " + this.y + "]";
     }
 };

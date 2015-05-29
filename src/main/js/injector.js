@@ -23,7 +23,7 @@ Injector.prototype = {
             var objName = deps[i];
             args.push(this.get(objName));
         }
-        var object = factory.apply(null, args);
+        object = factory.apply(null, args);
 
         this.objects[name] = object;
         return object;

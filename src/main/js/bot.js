@@ -16,12 +16,12 @@ function Bot() {
 		});
 	}
 
-	// For intellij indexing
-	var sampleTurn = {
-		attack: function(x, y) {
-			return true;
-		}
-	};
+	//// For intellij indexing
+	//var sampleTurn = {
+	//	attack: function(x, y) {
+	//		return true;
+	//	}
+	//};
 
 	// This will create an infinite loop of hunt and destroy tasks
 	this.task = createHuntTask();
