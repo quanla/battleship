@@ -51,23 +51,14 @@ battleship
         return map = {
             // Not attacked or on or around any ship and can fit ship
             newWhitePoint: function() {
-                for (var i=0; i<100;i++) {
-                    var x = Math.floor(Math.random() * 10);
-                    var y = Math.floor(Math.random() * 10);
-
-                    var h = rows[y][x];
-                    if (!h.attacked && !h.aroundShip && map.canFitShip(x, y)) {
-                        return {
-                            x: x,
-                            y: y
-                        };
-                    }
-                }
-
+                var points = [];
                 // Can not find?
-                return findPoint(function(h, x, y) {
-                    return !h.attacked && !h.aroundShip && map.canFitShip(x, y);
+                findPoint(function(h, x, y) {
+                    if (!h.attacked && !h.aroundShip && map.canFitShip(x, y)) {
+                        points.push(new Point(x, y));
+                    }
                 });
+                return points[Math.floor(Math.random() * points.length)];
             },
             shouldNotHit: function(x, y) {
                 if (y == null) {
@@ -116,6 +107,7 @@ battleship
                     p = shipPoints[i];
 
                     var h = this.get(p);
+                    h.attacked = true;
                     h.aroundShip = false;
                     h.onShip = true;
                 }
@@ -161,6 +153,24 @@ battleship
 
                 var max = getMax();
                 return floatingShips[0] <= max;
+            },
+            log: function() {
+                var ret = "";
+                for (var i = 0; i < rows.length; i++) {
+                    var row = rows[i];
+
+                    var rStr = "[";
+
+                    for (var j = 0; j < rows.length; j++) {
+                        var mapPos = rows[j];
+                        rStr += mapPos + ", ";
+                    }
+
+                    rStr += "]";
+
+                    ret += rStr + "\n";
+                }
+                return ret;
             }
 
         };
@@ -174,5 +184,18 @@ function Point(x, y) {
 Point.prototype = {
     toString: function() {
         return "[" + this.x + ", " + this.y + "]";
+    }
+};
+
+function MapPos() {
+    this.attacked= false;
+    this.onShip = false; // when attacked && hit
+    this.aroundShip = false; // !onShip
+}
+MapPos.prototype = {
+    toString: function() {
+        return (this.attacked ? "a" : " ") +
+        (this.onShip ? "o" : " ") +
+        (this.aroundShip ? "r" : " ");
     }
 };
